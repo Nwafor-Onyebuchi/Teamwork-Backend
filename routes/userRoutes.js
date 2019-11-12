@@ -1,8 +1,9 @@
 //User data
 const pool = require("../database/config");
 
-//Ruter
+//Router
 const router = (app) => {
+  //Get all users
   app.get("/", (req, res) => {
     res.send({
       message: "Node/Express API"
@@ -10,6 +11,7 @@ const router = (app) => {
   });
 
   app.get("/users", (req, res) => {
+    //Get a single user by Id
     pool.query("SELECT * FROM users", (error, result) => {
       if (error) throw error;
       console.log(result);
