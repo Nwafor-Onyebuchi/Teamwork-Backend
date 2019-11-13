@@ -7,7 +7,7 @@ const pool = new Pool({
   password: "teamwork",
   port: 5432
 });
-pool.query("SELECT * FROM users", (err, res) => {
+pool.query("SELECT * FROM user_profile", (err, res) => {
   console.log(err, res);
   //pool.end();
 });
