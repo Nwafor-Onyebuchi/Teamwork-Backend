@@ -72,5 +72,21 @@ const router = (app) => {
       }
     );
   });
+
+  // Delete a user with a specified ID
+  app.delete("/users/:id", (req, res) => {
+    const id = parseInt(req.params.id);
+
+    pool.query(
+      "DELETE FROM user_profile WHERE id = $1",
+      [id],
+      (error, results) => {
+        if (error) {
+          throw error;
+        }
+        res.status(200).send(`User deleted with ID: ${id}`);
+      }
+    );
+  });
 };
 module.exports = router;
