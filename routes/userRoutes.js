@@ -1,92 +1,25 @@
 //User data
 const pool = require("../database/config");
+const userCtrl = require("../controllers/users");
 
 //Router
 const router = (app) => {
   //Get login routes
-  app.get("/", (req, res) => {
-    res.send({
-      message: "Welcome to teamwork!"
-    });
-  });
+  app.get("/", userCtrl.getIndexPage);
 
-  app.get("/users", (req, res) => {
-    //Get all users
-    pool.query("SELECT * FROM user_profile", (error, result) => {
-      if (error) throw error;
-      console.log(result);
-      res.send(result);
-    });
-  });
+  //Get all users
+  app.get("/users", userCtrl.getAllUsers);
 
   //Get A single user by ID
-  app.get("/users/:id", (req, res) => {
-    const id = req.params.id;
-
-    pool.query(
-      "SELECT * FROM user_profile WHERE id = $1",
-      [id],
-      (error, result) => {
-        if (error) throw error;
-
-        res.send(result);
-      }
-    );
-  });
+  app.get("/users/:id", userCtrl.getSingleUser);
 
   //Create a user
-  app.post("/users", (req, res) => {
-    const {
-      first_name,
-      last_name,
-      email,
-      gender,
-      job_role,
-      department,
-      address
-    } = req.body;
-    pool.query(
-      "INSERT INTO user_profile (first_name,last_name, email, gender, job_role, department, address) VALUES ($1, $2, $3, $4, $5, $6, $7)",
-      [first_name, last_name, email, gender, job_role, department, address],
-      (error, result) => {
-        if (error) throw error;
-
-        res.status(201).send("User added successfully");
-      }
-    );
-  });
+  app.post("/users", userCtrl.createUser);
 
   // Update an existing user
-  app.put("/users/:id", (req, res) => {
-    const id = parseInt(req.params.id);
-    const { first_name, email } = req.body;
-
-    pool.query(
-      "UPDATE user_profile SET first_name = $1, email = $2 WHERE id = $3",
-      [first_name, email, id],
-      (error, results) => {
-        if (error) {
-          throw error;
-        }
-        res.status(200).send(`User modified with ID: ${id}`);
-      }
-    );
-  });
+  app.put("/users/:id", userCtrl.updateUser);
 
   // Delete a user with a specified ID
-  app.delete("/users/:id", (req, res) => {
-    const id = parseInt(req.params.id);
-
-    pool.query(
-      "DELETE FROM user_profile WHERE id = $1",
-      [id],
-      (error, results) => {
-        if (error) {
-          throw error;
-        }
-        res.status(200).send(`User deleted with ID: ${id}`);
-      }
-    );
-  });
+  app.delete("/users/:id", userCtrl.deleteUser);
 };
 module.exports = router;
