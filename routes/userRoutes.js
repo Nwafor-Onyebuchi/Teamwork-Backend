@@ -1,5 +1,3 @@
-//User data
-const pool = require("../database/config");
 const userCtrl = require("../controllers/users");
 
 //Router
@@ -22,4 +20,5 @@ const router = (app) => {
   // Delete a user with a specified ID
   app.delete("/users/:id", userCtrl.deleteUser);
 };
+
 module.exports = router;
