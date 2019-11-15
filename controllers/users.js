@@ -44,7 +44,7 @@ exports.createUser = (req, res) => {
     (error, result) => {
       if (error) throw error;
 
-      res.status(201).send("User added successfully");
+      res.status(201).send(`User added successfully: ${result.insertId}`);
     }
   );
 };
