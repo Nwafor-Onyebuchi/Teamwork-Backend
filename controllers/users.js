@@ -6,11 +6,32 @@ exports.getIndexPage = (req, res) => {
   });
 };
 
+exports.userLogin = (req, res) => {
+  const { email } = req.body;
+  pool.query(
+    "SELECT * FROM user_profile WHERE email = $1",
+    [email],
+    (error, result) => {
+      if (error) throw error;
+      res.json({
+        status: "Success",
+        data: {
+          message: "Login successful!",
+          result
+        }
+      });
+    }
+  );
+};
+
 exports.getAllUsers = (req, res) => {
   pool.query("SELECT * FROM user_profile", (error, result) => {
     if (error) throw error;
     console.log(result);
-    res.send(result);
+    res.json({
+      status: "Success",
+      data: result
+    });
   });
 };
 
@@ -23,7 +44,10 @@ exports.getSingleUser = (req, res) => {
     (error, result) => {
       if (error) throw error;
 
-      res.send(result);
+      res.json({
+        status: "Success",
+        data: result
+      });
     }
   );
 };
@@ -44,7 +68,13 @@ exports.createUser = (req, res) => {
     (error, result) => {
       if (error) throw error;
 
-      res.status(201).send(`User added successfully: ${result.insertId}`);
+      res.status(201).json({
+        status: "Success",
+        data: {
+          message: "User successfully created",
+          userId: result.insertId
+        }
+      });
     }
   );
 };

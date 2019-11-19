@@ -2,8 +2,11 @@ const userCtrl = require("../controllers/users");
 
 //Router
 const router = (app) => {
-  //Get login routes
+  //Get index route
   app.get("/", userCtrl.getIndexPage);
+
+  //User login
+  app.post("/auth/signin", userCtrl.userLogin);
 
   //Get all users
   app.get("/users", userCtrl.getAllUsers);
@@ -12,7 +15,7 @@ const router = (app) => {
   app.get("/users/:id", userCtrl.getSingleUser);
 
   //Create a user
-  app.post("/users", userCtrl.createUser);
+  app.post("/auth/create-user", userCtrl.createUser);
 
   // Update an existing user
   app.put("/users/:id", userCtrl.updateUser);
