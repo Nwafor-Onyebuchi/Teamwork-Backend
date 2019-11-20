@@ -7,10 +7,10 @@ exports.getIndexPage = (req, res) => {
 };
 
 exports.userLogin = (req, res) => {
-  const { email } = req.body;
+  const { email, user_name } = req.body;
   pool.query(
-    "SELECT * FROM user_profile WHERE email = $1",
-    [email],
+    "SELECT * FROM user_profile WHERE email = $1 AND user_name = $2",
+    [email, user_name],
     (error, result) => {
       if (error) throw error;
       res.json({
@@ -60,11 +60,23 @@ exports.createUser = (req, res) => {
     gender,
     job_role,
     department,
-    address
+    address,
+    pswd,
+    user_name
   } = req.body;
   pool.query(
-    "INSERT INTO user_profile (first_name,last_name, email, gender, job_role, department, address) VALUES ($1, $2, $3, $4, $5, $6, $7)",
-    [first_name, last_name, email, gender, job_role, department, address],
+    "INSERT INTO user_profile (first_name,last_name, email, gender, job_role, department, address, pswd, user_name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)",
+    [
+      first_name,
+      last_name,
+      email,
+      gender,
+      job_role,
+      department,
+      address,
+      pswd,
+      user_name
+    ],
     (error, result) => {
       if (error) throw error;
 
