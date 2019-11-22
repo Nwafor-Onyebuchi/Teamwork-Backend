@@ -1,4 +1,5 @@
 const pool = require("../database/config");
+const jwt = require("jsonwebtoken");
 
 exports.getIndexPage = (req, res) => {
   res.send({
@@ -13,15 +14,29 @@ exports.userLogin = (req, res) => {
     [email, user_name],
     (error, result) => {
       if (error) throw error;
-      res.json({
-        status: "Success",
-        data: {
-          message: "Login successful!",
-          result
-        }
+      jwt.sign({ result }, "secretkey", (err, token) => {
+        res.json({
+          status: "Success",
+          data: {
+            message: "Login successful!",
+            token
+          }
+        });
       });
     }
   );
+};
+
+exports.verifyToken = (req, res, next) => {
+  const bearerHearder = req.headers["authorization"];
+  if (typeof bearerHearder !== "undefined") {
+    const bearer = bearerHearder.split(" ");
+    const bearerToken = bearer[1];
+    req.token = bearerToken;
+    next();
+  } else {
+    res.sendStatus(403);
+  }
 };
 
 exports.getAllUsers = (req, res) => {
@@ -80,11 +95,18 @@ exports.createUser = (req, res) => {
     (error, result) => {
       if (error) throw error;
 
-      res.status(201).json({
-        status: "Success",
-        data: {
-          message: "User successfully created",
-          userId: result.insertId
+      jwt.verify(req.token, "secretkey", (err) => {
+        if (err) {
+          res.sendStatus(403);
+        } else {
+          res.status(201).json({
+            status: "Success",
+            data: {
+              message: "User successfully created",
+              userId: req.params.id,
+              token: req.token
+            }
+          });
         }
       });
     }
@@ -113,7 +135,7 @@ exports.deleteUser = (req, res) => {
   pool.query(
     "DELETE FROM user_profile WHERE id = $1",
     [id],
-    (error, results) => {
+    (error, result) => {
       if (error) {
         throw error;
       }

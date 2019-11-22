@@ -3,7 +3,7 @@ const userCtrl = require("../controllers/users");
 //Router
 const router = (app) => {
   //Get index route
-  app.get("/", userCtrl.getIndexPage);
+  app.get("/", userCtrl.verifyToken, userCtrl.getIndexPage);
 
   //User login
   app.post("/auth/signin", userCtrl.userLogin);
@@ -15,7 +15,7 @@ const router = (app) => {
   app.get("/users/:id", userCtrl.getSingleUser);
 
   //Create a user
-  app.post("/auth/create-user", userCtrl.createUser);
+  app.post("/auth/create-user", userCtrl.verifyToken, userCtrl.createUser);
 
   // Update an existing user
   app.put("/users/:id", userCtrl.updateUser);
