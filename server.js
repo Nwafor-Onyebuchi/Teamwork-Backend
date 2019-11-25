@@ -1,7 +1,7 @@
 const express = require("express");
-const pg = require("pg");
 const bodyParser = require("body-parser");
 const routes = require("./routes/userRoutes");
+const articleRoute = require("./routes/articleRoutes");
 
 const app = express();
 
@@ -13,6 +13,7 @@ app.use(
 );
 
 routes(app);
+articleRoute(app);
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
