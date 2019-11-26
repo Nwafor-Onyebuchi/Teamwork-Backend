@@ -83,6 +83,10 @@ exports.deleteArticle = (req, res) => {
     if (error) {
       throw error;
     }
-    res.status(200).send(`User deleted with ID: ${id}`);
+    res.json({
+      data: {
+        message: `Article successfully deleted. Article ID: ${id}`
+      }
+    });
   });
 };
